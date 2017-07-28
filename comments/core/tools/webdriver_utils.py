@@ -36,3 +36,28 @@ class WebdriverUtils(object):
             self._driver.delete_all_cookies()
             self._driver.close()
         self._driver = None
+
+
+class WebDriverFactory:
+    drivers = []
+
+    def init_driver(self, driver_name: str, port: int):
+        if driver_name.lower() == "chrome":
+            try:
+                capabilities = DesiredCapabilities.CHROME.copy()
+                driver = webdriver.Remote(port, capabilities)
+                self.drivers.append(driver)
+                return driver
+            except Exception:
+                raise Exception("Can't initialize webdriver")
+        elif driver_name.lower() == "firefox":
+            try:
+                capabilities = DesiredCapabilities.FIREFOX.copy()
+                driver = webdriver.Remote(port, capabilities)
+                self.drivers.append(driver)
+                return driver
+            except Exception:
+                raise Exception("Can't initialize webdriver")
+
+    def close_drivers(self):
+        [driver.quit() for driver in self.drivers]
