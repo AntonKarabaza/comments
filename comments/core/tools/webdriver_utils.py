@@ -1,6 +1,8 @@
 from selenium import webdriver
 from selenium.webdriver import DesiredCapabilities
 
+from comments.core.tools.property_reader import PropertyReader
+
 
 class WebdriverUtils(object):
     def __init__(self, driver_name: str):
@@ -11,14 +13,13 @@ class WebdriverUtils(object):
         if self._driver is None:
             if self._driver_name == 'chrome':
                 capabilities = DesiredCapabilities.CHROME.copy()
-                port = 9515
             elif self._driver_name == 'firefox':
                 capabilities = DesiredCapabilities.FIREFOX.copy()
-                port = 4444
             else:
                 raise Exception("Browser is not supported")
             try:
-                self._driver = webdriver.Remote(port, capabilities)
+                self._driver = webdriver.Remote(PropertyReader('config.properties')
+                                                .get_browser_port(), capabilities)
             except Exception:
                 raise Exception("Can't initialize webdriver")
             self._driver.implicitly_wait(10)
