@@ -3,7 +3,7 @@ from abc import abstractmethod, ABC
 from comments.core.tools.control import Control
 
 
-class Label(ABC):
+class ILabel(ABC):
     @abstractmethod
     def get_text(self):
         pass
@@ -17,7 +17,7 @@ class Label(ABC):
         pass
 
 
-class RealLabel(Label):
+class Label(ILabel):
     def __init__(self, control: Control):
         self._control = control
 

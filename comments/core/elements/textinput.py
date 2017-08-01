@@ -3,7 +3,7 @@ from abc import abstractmethod, ABC
 from comments.core.tools.control import Control
 
 
-class TextInput(ABC):
+class ITextInput(ABC):
     @abstractmethod
     def click(self):
         pass
@@ -29,7 +29,7 @@ class TextInput(ABC):
         pass
 
 
-class RealTextInput(TextInput):
+class TextInput(ITextInput):
     def __init__(self, control: Control):
         self._control = control
 
