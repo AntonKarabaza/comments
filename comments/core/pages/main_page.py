@@ -1,5 +1,6 @@
 from comments.core.entities.category import Category
 from comments.core.elements.button import RealButton
+from comments.core.pages.comment_details_page import CommentDetailsPage
 from comments.core.tools.control import Control
 
 from selenium.webdriver.common.by import By
@@ -46,4 +47,17 @@ class MainMenu:
 
     def click_delete_button(self) -> MainPage:
         RealButton(Control(self._driver.find_element(By.CSS_SELECTOR, "input[value='Delete']"))).click()
+        return MainPage(self._driver)
+
+
+class DialogMenu:
+    def __init__(self, driver: Driver):
+        self._driver = driver
+
+    def confirm(self) -> MainPage:
+        RealButton(Control(self._driver.find_element(By.CSS_SELECTOR, "div > button:nth-child(1)"))).click()
+        return MainPage(self._driver)
+
+    def cancel(self) -> MainPage:
+        RealButton(Control(self._driver.find_element(By.CSS_SELECTOR, "div > button:nth-child(2)"))).click()
         return MainPage(self._driver)
