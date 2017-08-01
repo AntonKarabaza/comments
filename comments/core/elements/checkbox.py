@@ -3,7 +3,7 @@ from abc import abstractmethod, ABC
 from comments.core.tools.control import Control
 
 
-class CheckBox(ABC):
+class ICheckBox(ABC):
     @abstractmethod
     def check(self):
         pass
@@ -21,7 +21,7 @@ class CheckBox(ABC):
         pass
 
 
-class RealCheckBox(CheckBox):
+class CheckBox(ICheckBox):
     def __init__(self, control: Control):
         self._control = control
 

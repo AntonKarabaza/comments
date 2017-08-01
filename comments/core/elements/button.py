@@ -3,7 +3,7 @@ from abc import abstractmethod, ABC
 from comments.core.tools.control import Control
 
 
-class Button(ABC):
+class IButton(ABC):
     @abstractmethod
     def click(self):
         pass
@@ -21,7 +21,7 @@ class Button(ABC):
         pass
 
 
-class RealButton(Button):
+class Button(IButton):
     def __init__(self, control: Control):
         self._control = control
 

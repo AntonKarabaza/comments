@@ -3,7 +3,7 @@ from abc import abstractmethod, ABC
 from comments.core.tools.control import Control
 
 
-class Link(ABC):
+class ILink(ABC):
     @abstractmethod
     def click(self):
         pass
@@ -25,7 +25,7 @@ class Link(ABC):
         pass
 
 
-class RealLink(Link):
+class Link(ILink):
     def __init__(self, control: Control):
         self._control = control
 

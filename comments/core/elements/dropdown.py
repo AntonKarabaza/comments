@@ -3,7 +3,7 @@ from selenium.webdriver.support.select import Select
 from abc import abstractmethod, ABC
 
 
-class DropDown(ABC):
+class IDropDown(ABC):
     @abstractmethod
     def select_by_text(self, text: str):
         pass
@@ -21,7 +21,7 @@ class DropDown(ABC):
         pass
 
 
-class RealDropDown(DropDown):
+class DropDown(IDropDown):
     def __init__(self, select: Select):
         self._select = select
 
