@@ -1,5 +1,8 @@
+from selenium.webdriver.support.select import Select
+
 from comments.core.entities.category import Category
 from comments.core.elements.button import RealButton
+from comments.core.elements.dropdown import RealDropDown
 from comments.core.pages.comment_details_page import CommentDetailsPage
 from comments.core.tools.control import Control
 
@@ -24,10 +27,10 @@ class MainPage:
         return self._main_menu.click_delete_button()
 
     def set_category_filter(self, category: Category):
-        return self._filter_menu.set_filter_category(category)
+        return self._filter_menu.set_category_filter(category)
 
     def set_status_filter(self, status: bool):
-        return self._filter_menu.set_filter_status(status)
+        return self._filter_menu.set_active_status_filter(status)
 
     def click_apply_filter(self):
         return self._filter_menu.apply_filter()
@@ -38,15 +41,48 @@ class MainMenu:
         self._driver = driver
 
     def click_new_button(self) -> CommentDetailsPage:
-        RealButton(Control(self._driver.find_element(By.ID, "newbutton"))).click()
+        RealButton(
+            Control(self._driver.find_element(By.ID, "newbutton"))).click()
         return CommentDetailsPage(self._driver)
 
     def click_edit_button(self) -> CommentDetailsPage:
-        RealButton(Control(self._driver.find_element(By.CSS_SELECTOR, "input[value='Edit..']"))).click()
+        RealButton(Control(self._driver.find_element(
+            By.CSS_SELECTOR, "input[value='Edit..']"))).click()
         return CommentDetailsPage(self._driver)
 
     def click_delete_button(self) -> MainPage:
-        RealButton(Control(self._driver.find_element(By.CSS_SELECTOR, "input[value='Delete']"))).click()
+        RealButton(Control(self._driver.find_element(
+            By.CSS_SELECTOR, "input[value='Delete']"))).click()
+        return MainPage(self._driver)
+
+
+class FilterMenu:
+    def __init__(self, driver: Driver):
+        self._driver = driver
+
+    def set_category_filter(self, category: Category = None) -> MainPage:
+        category_dropdown = RealDropDown(Select(self._driver.find_element(
+            By.ID, "SelectedCateg")))
+        if category is None:
+            category_dropdown.select_by_text("All")
+        else:
+            category_dropdown.select_by_text(category.get_category())
+        return MainPage(self._driver)
+
+    def set_active_status_filter(self, status: bool = None):
+        status_dropdown = RealDropDown(Select(self._driver.find_element(
+            By.ID, "SelectedStatus")))
+        if status is None:
+            status_dropdown.select_by_text("All")
+        elif status is True:
+            status_dropdown.select_by_text("Active")
+        else:
+            status_dropdown.select_by_text("Inactive")
+        return MainPage(self._driver)
+
+    def apply_filter(self):
+        RealButton(
+            Control(self._driver.find_element(By.ID, "applybutton"))).click()
         return MainPage(self._driver)
 
 
@@ -55,9 +91,11 @@ class DialogMenu:
         self._driver = driver
 
     def confirm(self) -> MainPage:
-        RealButton(Control(self._driver.find_element(By.CSS_SELECTOR, "div > button:nth-child(1)"))).click()
+        RealButton(Control(self._driver.find_element(
+            By.CSS_SELECTOR, "div > button:nth-child(1)"))).click()
         return MainPage(self._driver)
 
     def cancel(self) -> MainPage:
-        RealButton(Control(self._driver.find_element(By.CSS_SELECTOR, "div > button:nth-child(2)"))).click()
+        RealButton(Control(self._driver.find_element(
+            By.CSS_SELECTOR, "div > button:nth-child(2)"))).click()
         return MainPage(self._driver)
