@@ -3,7 +3,7 @@ from selenium.webdriver.common.by import By
 from comments.core.elements.button import Button
 from comments.core.elements.checkbox import CheckBox
 from comments.core.elements.textinput import TextInput
-from comments.core.pages.main_page import MainPage
+from comments.core.pages import main_page
 from comments.core.tools.control import Control
 from comments.core.tools.webdriver_utils import Driver
 
@@ -18,7 +18,7 @@ class CommentDetailsPage:
 
     def click_save_and_return_button(self):
         Button(Control(self._driver.find_element(By.CSS_SELECTOR, "#editor-navigation > input:nth-child(3)"))).click()
-        return MainPage(self._driver)
+        return main_page.MainPage(self._driver)
 
     def input_comment_text(self, text: str):
         comment_text = TextInput(Control(self._driver.find_element(By.ID, "Text")))
