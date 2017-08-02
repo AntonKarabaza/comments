@@ -68,7 +68,7 @@ class RemoteDriver(Driver):
 class WebDriverFactoryFromConfig:
     def init_driver(self):
         browser_name = PropertyReader('config.properties').get_browser_name()
-        port = PropertyReader('config.properties').get_browser_port()
+        port = PropertyReader('config.properties').get_host()
 
         if browser_name.lower() == "chrome":
             try:

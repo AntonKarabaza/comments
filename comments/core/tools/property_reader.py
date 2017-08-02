@@ -10,6 +10,6 @@ class PropertyReader(object):
         self._config.read(self._config_file)
         return self._config.get('browser settings', 'browser')
 
-    def get_browser_port(self) -> int:
+    def get_host(self) -> str:
         self._config.read(self._config_file)
-        return int(self._config.get('browser settings', 'browser_port'))
+        return self._config.get('browser settings', 'browser_port')
