@@ -7,6 +7,7 @@ from comments.core.elements.dropdown import DropDown
 from comments.core.entities.comment import Comment
 from comments.core.pages.comment_details_page import CommentDetailsPage
 from comments.core.tools.control import Control
+from comments.core.tools.selectors import Comment as CommSelectors
 
 from typing import List
 
@@ -20,6 +21,7 @@ class MainPage:
         self._driver = driver
         self._main_menu = MainMenu(self._driver)
         self._filter_menu = FilterMenu(self._driver)
+        self._comments_table = CommentsTable(self._driver)
 
     def click_new_button(self):
         return self._main_menu.click_new_button()
@@ -38,6 +40,9 @@ class MainPage:
 
     def click_apply_filter(self):
         return self._filter_menu.apply_filter()
+
+    def access_comments_table(self):
+        return self._comments_table
 
 
 class MainMenu:
@@ -109,33 +114,24 @@ class CommentsTable:
 
     def get_all_comments(self) -> List[Comment]:
         comments = []
-        for element in self._driver.find_elements(By.CSS_SELECTOR,
-                                                  ".webgrid-footer > td > a"):
-            comments.append([self.get_comment_from_row(row_num) for row_num in
-                             range(1, self.comments_count_on_page())])
-            paging_link = Link(Control(element))
-            if '>' in paging_link.get_text():
-                paging_link.click()
+        comments.append([self.get_comment_from_row(row_num) for row_num in
+                        range(1, self.comments_count_on_page())])
         return comments
 
     def get_comment_from_row(self, row: int) -> Comment:
-        table_row = self._driver.find_element(
-            By.XPATH, "//form[@name='commentsSelect']/table/tbody/tr[{row_num}]"
-                .format(row_num=row))
-
-        comment_id = int(table_row.find_element(
-            By.XPATH, "/td[@class='numbercolumn']").text)
-        comment_text = table_row.find_element(
-            By.XPATH, "/td[@class='textcolumn']").text
-        if table_row.find_element(
-                By.XPATH, "/td[@class='inactivecolumn']").text == "":
+        comment_id = int(self._driver.find_element(By.XPATH,
+                CommSelectors.COMMENT_NUMBER_BY_ROW.format(row_num=row)).text)
+        comment_text = self._driver.find_element(
+            By.XPATH, CommSelectors.COMMENT_TEXT_BY_ROW.format(row_num=row)).text
+        if self._driver.find_element(By.XPATH,
+            CommSelectors.COMMENT_ACTIVE_BY_ROW.format(row_num=row)).text == "":
             comment_active = True
         else:
             comment_active = False
-        categories = [Category(categorie.strip("Cat")) for categorie in
-                      table_row.find_element(By.XPATH,
-                                             "/td[@class='categorycolumn']").text.split(
-                          "; ")]
+        categories = [Category(category) for category in
+                      self._driver.find_element(By.XPATH,
+                      CommSelectors.COMMENT_CATEGORY_BY_ROW.format(row_num=row))
+                      .text.split("; ")]
 
         return Comment(comment_id, comment_text, comment_active, *categories)
 
