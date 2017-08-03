@@ -114,8 +114,20 @@ class CommentsTable:
 
     def get_all_comments(self) -> List[Comment]:
         comments = []
-        comments.append([self.get_comment_from_row(row_num) for row_num in
-                        range(1, self.comments_count_on_page())])
+
+        while True:
+            comments.extend(self.get_all_comments_from_page())
+            if self._next_page_exists():
+                self._go_next_page()
+            else:
+                return comments
+
+
+    def get_all_comments_from_page(self) -> List[Comment]:
+        comments = []
+
+        comments.extend([self.get_comment_from_row(row_num) for row_num in
+                        range(1, self.comments_count_on_page()+1)])
         return comments
 
     def get_comment_from_row(self, row: int) -> Comment:
@@ -135,14 +147,21 @@ class CommentsTable:
 
         return Comment(comment_id, comment_text, comment_active, *categories)
 
-    def set_next_page(self) -> MainPage:
+    def _go_next_page(self):
+        if self._next_page_exists():
+            footer = self._driver.find_elements(By.CSS_SELECTOR,
+                                                ".webgrid-footer > td > a")
+            footer[-1].click()
+
+    def _next_page_exists(self):
         footer = self._driver.find_elements(By.CSS_SELECTOR,
                                             ".webgrid-footer > td > a")
-        for element in footer:
-            paging_link = Link(Control(element))
-            if '>' in paging_link.get_text():
-                paging_link.click()
-        return MainPage(self._driver)
+
+        paging_link = Link(Control(footer[-1]))
+        if '>' in paging_link.get_text():
+            return True
+        else:
+            return False
 
     def comments_count_on_page(self):
         return len(self._driver.find_elements(
