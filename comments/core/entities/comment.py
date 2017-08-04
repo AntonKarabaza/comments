@@ -11,3 +11,9 @@ class Comment:
 
     def __eq__(self, other):
         return self.__dict__ == other.__dict__
+
+    def is_active(self):
+        if self._is_active:
+            return True
+        else:
+            return False
