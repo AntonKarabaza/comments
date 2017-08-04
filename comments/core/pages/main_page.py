@@ -7,7 +7,7 @@ from comments.core.elements.dropdown import DropDown
 from comments.core.entities.comment import Comment
 from comments.core.pages.comment_details_page import CommentDetailsPage
 from comments.core.tools.control import Control
-from comments.core.tools.selectors import Comment as CommSelectors
+from comments.core.tools.selectors import Comment as CommSelectors, Paging, Dialog, MainMenu as Main, FilterMenu as Filter
 
 from typing import List
 
@@ -50,17 +50,17 @@ class MainMenu:
         self._driver = driver
 
     def click_new_button(self) -> CommentDetailsPage:
-        Button(Control(self._driver.find_element(By.ID, "newbutton"))).click()
+        Button(Control(self._driver.find_element(By.ID, Main.NEW_BTN))).click()
         return CommentDetailsPage(self._driver)
 
     def click_edit_button(self) -> CommentDetailsPage:
         Button(Control(self._driver.find_element(
-            By.CSS_SELECTOR, "input[value='Edit..']"))).click()
+            By.CSS_SELECTOR, Main.EDIT_BTN))).click()
         return CommentDetailsPage(self._driver)
 
     def click_delete_button(self) -> MainPage:
         Button(Control(self._driver.find_element(
-            By.CSS_SELECTOR, "input[value='Delete']"))).click()
+            By.CSS_SELECTOR, Main.DELETE_BTN))).click()
         return MainPage(self._driver)
 
 
@@ -70,7 +70,7 @@ class FilterMenu:
 
     def set_category_filter(self, category: Category = None) -> MainPage:
         category_dropdown = DropDown(Select(self._driver.find_element(
-            By.ID, "SelectedCateg")))
+            By.ID, Filter.CATEGORY_FILTER)))
         if category is None:
             category_dropdown.select_by_text("All")
         else:
@@ -79,7 +79,7 @@ class FilterMenu:
 
     def set_active_status_filter(self, status: bool = None):
         status_dropdown = DropDown(Select(self._driver.find_element(
-            By.ID, "SelectedStatus")))
+            By.ID, Filter.Filter.STATUS_FILTER)))
         if status is None:
             status_dropdown.select_by_text("All")
         elif status is True:
@@ -89,7 +89,7 @@ class FilterMenu:
         return MainPage(self._driver)
 
     def apply_filter(self):
-        Button(Control(self._driver.find_element(By.ID, "applybutton"))).click()
+        Button(Control(self._driver.find_element(By.ID, Filter.APPLY_BTN))).click()
         return MainPage(self._driver)
 
 
@@ -99,12 +99,12 @@ class DialogMenu:
 
     def confirm(self) -> MainPage:
         Button(Control(self._driver.find_element(
-            By.CSS_SELECTOR, "div > button:nth-child(1)"))).click()
+            By.CSS_SELECTOR, Dialog.YES_BTN))).click()
         return MainPage(self._driver)
 
     def cancel(self) -> MainPage:
         Button(Control(self._driver.find_element(
-            By.CSS_SELECTOR, "div > button:nth-child(2)"))).click()
+            By.CSS_SELECTOR, Dialog.NO_BTN))).click()
         return MainPage(self._driver)
 
 
@@ -150,12 +150,12 @@ class CommentsTable:
     def _go_next_page(self):
         if self._next_page_exists():
             footer = self._driver.find_elements(By.CSS_SELECTOR,
-                                                ".webgrid-footer > td > a")
+                                                Paging.PAGING_LINKS)
             footer[-1].click()
 
     def _next_page_exists(self):
         footer = self._driver.find_elements(By.CSS_SELECTOR,
-                                            ".webgrid-footer > td > a")
+                                            Paging.PAGING_LINKS)
 
         paging_link = Link(Control(footer[-1]))
         if '>' in paging_link.get_text():
@@ -165,11 +165,11 @@ class CommentsTable:
 
     def comments_count_on_page(self):
         return len(self._driver.find_elements(
-            By.XPATH, "//form[@name='commentsSelect']/table/tbody/tr"))
+            By.XPATH, CommSelectors.ROWS))
 
     def set_prev_page(self) -> MainPage:
         footer = self._driver.find_elements(By.CSS_SELECTOR,
-                                            ".webgrid-footer > td > a")
+                                            Paging.PAGING_LINKS)
         for element in footer:
             paging_link = Link(Control(element))
             if '<' in paging_link.get_text():
@@ -190,11 +190,10 @@ class CommentsTable:
 
     def select_comment_by_number(self, number: int) -> MainPage:
         rows = self._driver.find_elements(
-            By.XPATH, "//form[@name='commentsSelect']/table/tbody/tr")
+            By.XPATH, CommSelectors.ROWS)
         for element in rows:
             if int(element.find_element(
-                    By.XPATH, "/td[@class='numbercolumn']").text) == number:
+                    By.XPATH, CommSelectors.COMMENT_NUMBER_BY_ROW).text) == number:
                 element.find_element(
-                    By.CSS_SELECTOR, 'td.checkedcolumn > input['
-                                     'type="checkbox"]').click()
+                    By.CSS_SELECTOR, CommSelectors.CHECKBOX).click()
         return MainPage(self._driver)
