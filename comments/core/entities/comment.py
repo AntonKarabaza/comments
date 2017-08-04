@@ -1,5 +1,4 @@
 from comments.core.entities.category import Category
-from typing import List
 
 
 class Comment:
@@ -9,3 +8,6 @@ class Comment:
         self._text = comm_text
         self._is_active = is_active
         self._category = comm_category
+
+    def __eq__(self, other):
+        return self.__dict__ == other.__dict__

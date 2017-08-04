@@ -8,3 +8,6 @@ class Category:
             return 'Cat' + str(category_number)
         except ValueError:
             return self._category
+
+    def __eq__(self, other):
+        return self.__dict__ == other.__dict__
