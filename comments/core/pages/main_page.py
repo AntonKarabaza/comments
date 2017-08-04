@@ -188,10 +188,17 @@ class CommentsTable:
             return False
 
     def is_all_comments_with_status(self, status: bool) -> bool:
-        pass
+        comments = self.get_all_comments()
 
-    def is_all_comments_contain_category(self, category: Category) -> bool:
-        pass
+        if status:
+            for comment in comments:
+                if not comment.is_active():
+                    return False
+        else:
+            for comment in comments:
+                if comment.is_active():
+                    return False
+        return True
 
     def select_comment_by_number(self, number: int) -> MainPage:
         CheckBox(Control(self._driver.find_element(
