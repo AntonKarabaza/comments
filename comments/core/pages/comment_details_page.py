@@ -31,7 +31,8 @@ class CommentDetailsPage:
         return self
 
     def edit_comment_text(self, text: str):
-        TextInput(Control(self._driver.find_element(By.ID, Comment.EDIT_TEXT))).type(text)
+        TextInput(Control(self._driver.find_element(By.ID, Comment.EDIT_TEXT)))\
+            .type(text)
         return self
 
     def input_comment_number(self, text: str):

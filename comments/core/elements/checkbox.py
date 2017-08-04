@@ -26,11 +26,11 @@ class CheckBox(ICheckBox):
         self._control = control
 
     def check(self):
-        if self._control.is_selected():
+        if not self._control.is_selected():
             self._control.click()
 
     def uncheck(self):
-        if not self._control.is_selected():
+        if self._control.is_selected():
             self._control.click()
 
     def is_checked(self):

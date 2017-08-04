@@ -1,5 +1,8 @@
 class Comment:
     ROWS = "//form[@name='commentsSelect']/table/tbody/tr"
+    COMMENT_CHECKBOX_BY_ROW = "//form[@name='commentsSelect']/table/tbody/" \
+                            "tr[{row_num}]/td[@class='checkedcolumn']/" \
+                              "input[@type='checkbox']"
     COMMENT_NUMBER_BY_ROW = "//form[@name='commentsSelect']/table/tbody/" \
                             "tr[{row_num}]/td[@class='numbercolumn']"
     COMMENT_TEXT_BY_ROW = "//form[@name='commentsSelect']/table/tbody/" \
@@ -8,7 +11,6 @@ class Comment:
                             "tr[{row_num}]/td[@class='inactivecolumn']"
     COMMENT_CATEGORY_BY_ROW = "//form[@name='commentsSelect']/table/tbody/" \
                               "tr[{row_num}]/td[@class='categorycolumn']"
-    CHECKBOX = 'td.checkedcolumn > input[type="checkbox"]'
     EDIT_NUMBER = "Number"
     EDIT_TEXT = "Text"
     SAVE_BTN = "#editor-navigation > input:nth-child(2)"
