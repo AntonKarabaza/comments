@@ -1,5 +1,6 @@
 from selenium.webdriver.support.select import Select
 
+from comments.core.elements.checkbox import CheckBox
 from comments.core.elements.link import Link
 from comments.core.entities.category import Category
 from comments.core.elements.button import Button
@@ -7,7 +8,8 @@ from comments.core.elements.dropdown import DropDown
 from comments.core.entities.comment import Comment
 from comments.core.pages.comment_details_page import CommentDetailsPage
 from comments.core.tools.control import Control
-from comments.core.tools.selectors import Comment as CommSelectors, Paging, Dialog, MainMenu as Main, FilterMenu as Filter
+from comments.core.tools.selectors import Comment as CommSelectors,\
+    Paging, Dialog, MainMenu as Main, FilterMenu as Filter
 
 from typing import List
 
@@ -79,7 +81,7 @@ class FilterMenu:
 
     def set_active_status_filter(self, status: bool = None):
         status_dropdown = DropDown(Select(self._driver.find_element(
-            By.ID, Filter.Filter.STATUS_FILTER)))
+            By.ID, Filter.STATUS_FILTER)))
         if status is None:
             status_dropdown.select_by_text("All")
         elif status is True:
@@ -131,8 +133,11 @@ class CommentsTable:
         return comments
 
     def get_comment_from_row(self, row: int) -> Comment:
-        comment_id = int(self._driver.find_element(By.XPATH,
+        try:
+            comment_id = int(self._driver.find_element(By.XPATH,
                 CommSelectors.COMMENT_NUMBER_BY_ROW.format(row_num=row)).text)
+        except ValueError:
+            comment_id = None
         comment_text = self._driver.find_element(
             By.XPATH, CommSelectors.COMMENT_TEXT_BY_ROW.format(row_num=row)).text
         if self._driver.find_element(By.XPATH,
@@ -145,7 +150,7 @@ class CommentsTable:
                       CommSelectors.COMMENT_CATEGORY_BY_ROW.format(row_num=row))
                       .text.split("; ")]
 
-        return Comment(comment_id, comment_text, comment_active, *categories)
+        return Comment(comment_text, comment_active, comment_id, *categories)
 
     def _go_next_page(self):
         if self._next_page_exists():
@@ -189,11 +194,8 @@ class CommentsTable:
         pass
 
     def select_comment_by_number(self, number: int) -> MainPage:
-        rows = self._driver.find_elements(
-            By.XPATH, CommSelectors.ROWS)
-        for element in rows:
-            if int(element.find_element(
-                    By.XPATH, CommSelectors.COMMENT_NUMBER_BY_ROW).text) == number:
-                element.find_element(
-                    By.CSS_SELECTOR, CommSelectors.CHECKBOX).click()
+        CheckBox(Control(self._driver.find_element(
+            By.XPATH, CommSelectors.COMMENT_CHECKBOX_BY_ROW\
+            .format(row_num=number)))).check()
+
         return MainPage(self._driver)
