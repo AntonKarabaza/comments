@@ -75,10 +75,10 @@ class MainMenu:
             By.CSS_SELECTOR, Main.EDIT_BTN))).click()
         return CommentDetailsPage(self._driver)
 
-    def click_delete_button(self) -> MainPage:
+    def click_delete_button(self) -> DialogMenu:
         Button(Control(self._driver.find_element(
             By.CSS_SELECTOR, Main.DELETE_BTN))).click()
-        return MainPage(self._driver)
+        return DialogMenu(self._driver)
 
 
 class FilterMenu:
