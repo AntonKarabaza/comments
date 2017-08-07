@@ -47,6 +47,21 @@ class MainPage:
         return self._comments_table
 
 
+class DialogMenu:
+    def __init__(self, driver: Driver):
+        self._driver = driver
+
+    def confirm(self) -> MainPage:
+        Button(Control(self._driver.find_element(
+            By.CSS_SELECTOR, Dialog.YES_BTN))).click()
+        return MainPage(self._driver)
+
+    def cancel(self) -> MainPage:
+        Button(Control(self._driver.find_element(
+            By.CSS_SELECTOR, Dialog.NO_BTN))).click()
+        return MainPage(self._driver)
+
+
 class MainMenu:
     def __init__(self, driver: Driver):
         self._driver = driver
@@ -92,21 +107,6 @@ class FilterMenu:
 
     def apply_filter(self):
         Button(Control(self._driver.find_element(By.ID, Filter.APPLY_BTN))).click()
-        return MainPage(self._driver)
-
-
-class DialogMenu:
-    def __init__(self, driver: Driver):
-        self._driver = driver
-
-    def confirm(self) -> MainPage:
-        Button(Control(self._driver.find_element(
-            By.CSS_SELECTOR, Dialog.YES_BTN))).click()
-        return MainPage(self._driver)
-
-    def cancel(self) -> MainPage:
-        Button(Control(self._driver.find_element(
-            By.CSS_SELECTOR, Dialog.NO_BTN))).click()
         return MainPage(self._driver)
 
 
