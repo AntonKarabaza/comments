@@ -10,11 +10,12 @@ and selenium libraties to run automated tests.
 
 ### How to run automated tests?
 
-1. You need to download the latest version of webdriver executable to run tests.
-Check **[selenium official website](http://docs.seleniumhq.org/download/)** 
-`Third Party Browser Drivers` for latest versions of browser that you need.
-2. Then launch it and run command `pytest comments` from terminal within your 
-virtual environment.
+1. Download the latest version of Selenium Standalone Server from 
+**[selenium official website](http://docs.seleniumhq.org/download/)**.
+2. Launch selenium server using command `java -jar 
+selenium-server-standalone-3.4.0.jar`. Name of the jar file can be different 
+if you get later version of Selenium Server.
+3. Run command `pytest comments` from terminal within your virtual environment.
 
 
 ### Tests samples
