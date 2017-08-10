@@ -68,19 +68,21 @@ class RemoteDriver(Driver):
 class WebDriverFactoryFromConfig:
     def init_driver(self):
         browser_name = PropertyReader('config.properties').get_browser_name()
-        port = PropertyReader('config.properties').get_host()
+        executor = PropertyReader('config.properties').get_executor()
 
         if browser_name.lower() == "chrome":
             try:
-                capabilities = DesiredCapabilities.CHROME.copy()
-                driver = webdriver.Remote(port, capabilities)
+                driver = webdriver.Remote(
+                    command_executor=executor,
+                    desired_capabilities=DesiredCapabilities.CHROME)
                 return RemoteDriver(driver)
             except Exception:
                 raise Exception("Can't initialize webdriver")
         elif browser_name.lower() == "firefox":
             try:
-                capabilities = DesiredCapabilities.FIREFOX.copy()
-                driver = webdriver.Remote(port, capabilities)
+                driver = webdriver.Remote(
+                    command_executor=executor,
+                    desired_capabilities=DesiredCapabilities.FIREFOX)
                 return RemoteDriver(driver)
             except Exception:
                 raise Exception("Can't initialize webdriver")
