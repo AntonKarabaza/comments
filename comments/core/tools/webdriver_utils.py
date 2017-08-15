@@ -61,7 +61,7 @@ class RemoteDriver(Driver):
     def stop(self):
         if self._driver is not None:
             self._driver.delete_all_cookies()
-            self._driver.close()
+            self._driver.quit()
         self._driver = None
 
 
